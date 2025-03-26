@@ -93,7 +93,11 @@ end process;
 
 Decoder_Section: process(current_state)
 begin
+  -- The decoder section sets the outputs of the traffic lights, crossing signals, and state number LEDs based on the current state.
+  -- For each state, we assign values to NS and EW lights, crossing indicators, and whether the pedestrian request has been cleared.
+
   case current_state is
+    -- S0 & S1: Blinking NS green, EW red; no crossing, no clears
     when S0 | S1 =>
       ns_clear <= '0'; 
       ns_green <= blink_sig; 
@@ -104,6 +108,8 @@ begin
       ew_amber <= '0'; 
       ew_red <= '1'; 
       ew_crossing <= '0';
+
+    -- S2 to S5: NS solid green, EW red; NS crossing allowed
     when S2 | S3 | S4 | S5 =>
       ns_clear <= '0'; 
       ns_green <= '1'; 
@@ -115,6 +121,8 @@ begin
       ew_amber <= '0'; 
       ew_red <= '1'; 
       ew_crossing <= '0';
+
+    -- S6: NS amber, EW red; NS crossing disallowed, NS clear active
     when S6 =>
       ns_clear <= '1'; 
       ns_green <= '0'; 
@@ -126,6 +134,8 @@ begin
       ew_amber <= '0'; 
       ew_red <= '1'; 
       ew_crossing <= '0';
+
+    -- S7: NS amber continues blinking, no pedestrian clear
     when S7 =>
       ns_clear <= '0'; 
       ns_green <= '0'; 
@@ -137,6 +147,8 @@ begin
       ew_amber <= '0'; 
       ew_red <= '1'; 
       ew_crossing <= '0';
+
+    -- S8 & S9: EW green blinking, NS red; no crossings
     when S8 | S9 =>
       ns_clear <= '0'; 
       ns_green <= '0'; 
@@ -148,6 +160,8 @@ begin
       ew_amber <= '0'; 
       ew_red <= '0'; 
       ew_crossing <= '0';
+
+    -- S10 to S13: EW solid green, NS red; EW crossing allowed
     when S10 | S11 | S12 | S13 =>
       ns_clear <= '0'; 
       ns_green <= '0'; 
@@ -159,6 +173,8 @@ begin
       ew_amber <= '0'; 
       ew_red <= '0'; 
       ew_crossing <= '1';
+
+    -- S14: EW amber, NS red; EW clear active
     when S14 =>
       ns_clear <= '0'; 
       ns_green <= '0'; 
@@ -170,30 +186,35 @@ begin
       ew_amber <= '1'; 
       ew_red <= '0'; 
       ew_crossing <= '0';
+
+    -- S15: EW amber (no clear), NS red; no crossing
     when S15 =>
       ns_clear <= '0'; 
-		  ns_green <= '0'; 
-		  ns_amber <= '0'; 
-		  ns_red <= '1'; 
-		  ns_crossing <= '0';
+      ns_green <= '0'; 
+      ns_amber <= '0'; 
+      ns_red <= '1'; 
+      ns_crossing <= '0';
       ew_clear <= '0'; 
-		  ew_green <= '0'; 
-		  ew_amber <= '1'; 
-		  ew_red <= '0'; 
-		  ew_crossing <= '0';
-	 when off_state =>
+      ew_green <= '0'; 
+      ew_amber <= '1'; 
+      ew_red <= '0'; 
+      ew_crossing <= '0';
+
+    -- off_state: blinking red for NS and blinking amber for EW; simulates an emergency state or power-saving mode
+    when off_state =>
       ns_clear <= '0'; 
-		  ns_green <= '0'; 
-		  ns_amber <= '0'; 
-		  ns_red <= blink_sig; 
-		  ns_crossing <= '0';
+      ns_green <= '0'; 
+      ns_amber <= '0'; 
+      ns_red <= blink_sig; 
+      ns_crossing <= '0';
       ew_clear <= '0'; 
-		  ew_green <= '0'; 
-		  ew_amber <= blink_sig; 
-		  ew_red <= '0'; 
-		  ew_crossing <= '0';		
+      ew_green <= '0'; 
+      ew_amber <= blink_sig; 
+      ew_red <= '0'; 
+      ew_crossing <= '0';		
   end case;
 
+  -- Set the 4-bit state number for display using LEDs or 7-seg display
   case current_state is
     when S0  => fourbit_state_number <= "0000";
     when S1  => fourbit_state_number <= "0001";
@@ -211,7 +232,7 @@ begin
     when S13 => fourbit_state_number <= "1101";
     when S14 => fourbit_state_number <= "1110";
     when S15 => fourbit_state_number <= "1111";
-	 when off_state => fourbit_state_number <= "1111";
+    when off_state => fourbit_state_number <= "1111"; -- Reuses same binary as S15 for display simplicity
   end case;
 end process;
 
