@@ -8,8 +8,10 @@ use ieee.numeric_std.all;
 -- Defines the state machine entity, which is a mealy state machine as there is inputs effecting which state is next.
 entity State_Machine IS 
   port (
-    clk_input, reset, sm_clken, blink_sig, ns_request, ew_request, switch : IN std_logic; -- input for clock, reset, clock enable, blink signal, pedestrian requests and Switch 0 bit
-    ns_green, ns_amber, ns_red, ew_green, ew_amber, ew_red : OUT std_logic; -- Output for the trafic signals, 3 different values for each ns and ew, these outputs can have 3 values each being 0 off, 1 on, blink_sig for blinking
+    -- Below is the input for clock, reset, clock enable, blink signal, pedestrian requests and Switch 0 bit
+    clk_input, reset, sm_clken, blink_sig, ns_request, ew_request, switch : IN std_logic; 
+    -- Below is the output for the trafic signals, 3 different values for each ns and ew, these outputs can have 3 values each being 0 off, 1 on, blink_sig for blinking
+    ns_green, ns_amber, ns_red, ew_green, ew_amber, ew_red : OUT std_logic;
     ns_crossing, ew_crossing : OUT std_logic; --Led output to indicate when crossing is allowed
     fourbit_state_number : OUT std_logic_vector(3 downto 0); -- led output using binary numerical representation of which state is on
     ns_clear, ew_clear : OUT std_logic -- output to clear pedestrian crossing signals
@@ -18,7 +20,8 @@ end entity;
 
 --Definition of mealy state machine logic
 architecture SM of State_Machine is
-  type STATE_NAMES IS (S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, off_state); -- declaration of 16 states + an offline mode state which is similar to the off_state, however it acts differently as the 7 seg mux display blinks during this state
+-- Declaration of 16 states + an offline mode state which is similar to the off_state, however it acts differently as the 7 seg mux display blinks during this state
+  type STATE_NAMES IS (S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, off_state);
   signal current_state, next_state : STATE_NAMES; -- defining signals which are of type STATE_NAMES
 begin
 
