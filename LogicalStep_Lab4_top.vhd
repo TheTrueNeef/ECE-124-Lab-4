@@ -88,8 +88,10 @@ ARCHITECTURE SimpleCircuit OF LogicalStep_Lab4_top IS
   -- defines state machine component
   
 	component State_Machine port (
-		clk_input, reset, sm_clken, blink_sig, ns_request, ew_request, switch			: IN std_logic; 		-- Inputs for clock, reset, enable, blink sig and pedestrian inputs
-		ns_green, ns_amber, ns_red, ew_green, ew_amber, ew_red								: OUT std_logic;	-- Output for green, amber and red lights (1 when on, 0 when off) in both NS and EW directions
+		-- Below is the inputs for clock, reset, enable, blink sig and pedestrian inputs
+		clk_input, reset, sm_clken, blink_sig, ns_request, ew_request, switch			: IN std_logic;
+		-- Below is the output for green, amber and red lights (1 when on, 0 when off) in both NS and EW directions
+		ns_green, ns_amber, ns_red, ew_green, ew_amber, ew_red							: OUT std_logic;
 		ns_crossing, ew_crossing	: OUT std_logic;		-- Output to indicate NS and EW crossing
 		fourbit_state_number : OUT std_logic_vector(3 downto 0); -- 4 bit output to represent the current state of the machine (in binary)
 		ns_clear, ew_clear : OUT std_logic -- Output to clear pedestrian requests for ns and ew
