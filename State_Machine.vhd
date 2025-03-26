@@ -1,4 +1,4 @@
--- Members: Adnan Eddeb, Afnan Alam | Lab4_REPORT | LS201 | Group 21
+-- Afnan Alam and Adnan Eddeb, Lab 4 Report, Lab Section 201, Group 21
 
 -- Importing libraries and necessary packages
 library ieee;
